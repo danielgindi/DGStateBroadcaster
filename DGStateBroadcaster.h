@@ -44,10 +44,13 @@ typedef enum _DGStateBroadcasterState
 @class DGStateBroadcaster;
 @protocol DGStateBroadcasterDelegate <NSObject>
 
-@optional - (void)stateBroadcasterBatteryChargedLow:(BOOL)isLow charging:(BOOL)isCharging;
-@optional - (void)stateBroadcasterDistanceTravelledToLocation:(CLLocation*)location;
-@optional - (void)stateBroadcasterLocationAccurateEnough:(BOOL)accurateEnough;
-@optional - (void)stateBroadcasterNetworkReachable:(BOOL)reachable isOnWifi:(BOOL)wifi;
+@optional
+
+- (void)stateBroadcasterBatteryChargedLow:(BOOL)isLow charging:(BOOL)isCharging;
+- (void)stateBroadcasterDistanceTravelledToLocation:(CLLocation*)location;
+- (void)stateBroadcasterLocationAccurateEnough:(BOOL)accurateEnough;
+- (void)stateBroadcasterNetworkReachable:(BOOL)reachable isOnWifi:(BOOL)wifi;
+- (void)stateBroadcasterLocationManagerDidChangeAuthorizationStatus:(CLAuthorizationStatus)status;
 
 @end
 

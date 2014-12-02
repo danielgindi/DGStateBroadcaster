@@ -640,4 +640,15 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    for (id<DGStateBroadcasterDelegate> delegate in delegates)
+    {
+        if ([delegate respondsToSelector:@selector(stateBroadcasterLocationManagerDidChangeAuthorizationStatus:)])
+        {
+            [delegate stateBroadcasterLocationManagerDidChangeAuthorizationStatus:status];
+        }
+    }
+}
+
 @end
