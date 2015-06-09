@@ -87,8 +87,7 @@
 
 - (void)dealloc
 {
-    CFRelease(reachabilityRef);
-    reachabilityRef = NULL;
+    [self destroyReachability];
 }
 
 + (DGStateBroadcaster*)instance
@@ -363,6 +362,7 @@ static NSString *s_DGStateBroadcaster_RechabilitySync = @"s_DGStateBroadcaster_R
     @synchronized(s_DGStateBroadcaster_RechabilitySync)
     {
         CFRelease(reachabilityRef);
+        reachabilityRef = NULL;
     }
 }
 
