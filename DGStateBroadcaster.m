@@ -7,27 +7,27 @@
 //  https://github.com/danielgindi/DGStateBroadcaster
 //
 //  The MIT License (MIT)
-//  
+//
 //  Copyright (c) 2014 Daniel Cohen Gindi (danielgindi@gmail.com)
-//  
+//
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-//  
+//
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-//  
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE. 
-//  
+//  SOFTWARE.
+//
 
 #import "DGStateBroadcaster.h"
 #import <CoreLocation/CoreLocation.h>
@@ -90,7 +90,7 @@
     [self destroyReachability];
 }
 
-+ (DGStateBroadcaster*)instance
++ (DGStateBroadcaster *)instance
 {
     static DGStateBroadcaster *sharedInstance = nil;
     static dispatch_once_t onceToken;
@@ -330,7 +330,7 @@ static NSString *s_DGStateBroadcaster_RechabilitySync = @"s_DGStateBroadcaster_R
                     addr.sin_family = AF_INET;
                 }
             }
-            reachabilityRef = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&addr);
+            reachabilityRef = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)&addr);
         }
         
         if (!reachabilityQueue)
@@ -343,7 +343,7 @@ static NSString *s_DGStateBroadcaster_RechabilitySync = @"s_DGStateBroadcaster_R
         if (SCNetworkReachabilitySetCallback(reachabilityRef, DGStateBroadcaster_ReachabilityCallback, &context))
         {
             // set it as our reachability queue which will retain the queue
-            if(!SCNetworkReachabilitySetDispatchQueue(reachabilityRef, reachabilityQueue))
+            if (SCNetworkReachabilitySetDispatchQueue(reachabilityRef, reachabilityQueue))
             {
                 NSLog(@"DGStateBroadcaster: Reachability- can't set dispatch queue");
             }
@@ -366,10 +366,10 @@ static NSString *s_DGStateBroadcaster_RechabilitySync = @"s_DGStateBroadcaster_R
     }
 }
 
-static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void*info)
+static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
 {
 #pragma unused (target)
-    DGStateBroadcaster *_self = ((__bridge DGStateBroadcaster*)info);
+    DGStateBroadcaster *_self = ((__bridge DGStateBroadcaster *)info);
     
     [_self reachabilityChanged:flags];
 }
@@ -399,45 +399,48 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
 + (BOOL)isReachable
 {
     DGStateBroadcaster *instance = self.instance;
-	if (instance->reachabilityRef)
-	{
-		SCNetworkReachabilityFlags flags = 0;
-		if(SCNetworkReachabilityGetFlags(self.instance->reachabilityRef, &flags))
-		{
-			BOOL reachable = ((flags & kSCNetworkFlagsReachable) != 0);
-			BOOL needsConnection = ((flags & kSCNetworkFlagsConnectionRequired) != 0);
-			reachable = reachable && !needsConnection;
-    
-			return reachable;
-		}
-		else
-		{
-			return NO;
-		}
-	}
+    if (instance->reachabilityRef)
+    {
+        SCNetworkReachabilityFlags flags = 0;
+        if (SCNetworkReachabilityGetFlags(self.instance->reachabilityRef, &flags))
+        {
+            BOOL reachable = ((flags & kSCNetworkFlagsReachable) != 0);
+            BOOL needsConnection = ((flags & kSCNetworkFlagsConnectionRequired) != 0);
+            reachable = reachable && !needsConnection;
+            
+            return reachable;
+        }
+        else
+        {
+            return NO;
+        }
+    }
     return NO;
 }
 
 + (BOOL)isOnWifi
 {
-	NSString *wifiAddress = self.wifiIpAddress;
-	return !!wifiAddress.length;
+    NSString *wifiAddress = self.wifiIpAddress;
+    return !!wifiAddress.length;
 }
 
-+ (NSString*)wifiIpAddress
++ (NSString *)wifiIpAddress
 { // Thanks to Matt Brown!
     BOOL success;
     struct ifaddrs *addrs;
     const struct ifaddrs *cursor;
     
     success = getifaddrs(&addrs) == 0;
-    if (success) {
+    if (success)
+    {
         cursor = addrs;
-        while (cursor != NULL) {
+        while (cursor != NULL)
+        {
             if (cursor->ifa_addr->sa_family == AF_INET && (cursor->ifa_flags & IFF_LOOPBACK) == 0) // this second test keeps from picking up the loopback address
             {
                 NSString *name = [NSString stringWithUTF8String:cursor->ifa_name];
-                if ([name isEqualToString:@"en0"]) { // found the WiFi adapter
+                if ([name isEqualToString:@"en0"]) // found the WiFi adapter
+                {
                     return [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)];
                 }
             }
@@ -449,7 +452,7 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
     return NULL;
 }
 
-+ (void)setReachabilityWithHostname:(NSString*)hostname
++ (void)setReachabilityWithHostname:(NSString *)hostname
 {
     DGStateBroadcaster *instance = self.instance;
     instance->hasReachabilityAddress = NO;
@@ -458,7 +461,7 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
     [instance initReachabilityIfNeeded:YES];
 }
 
-+ (void)setReachabilityWithAddress:(const struct sockaddr_in*)hostAddress
++ (void)setReachabilityWithAddress:(const struct sockaddr_in *)hostAddress
 {
     DGStateBroadcaster *instance = self.instance;
     instance->reachabilityAddress = *hostAddress;
@@ -487,10 +490,11 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
 }
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-+ (void)setLocationPurpose:(NSString*)purpose
++ (void)setLocationPurpose:(NSString *)purpose
 {
     self.instance->locationPurpose = [purpose copy];
 }
+
 #endif
 
 + (void)setLocationActivityType:(CLActivityType)activityType
@@ -558,7 +562,7 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
 
 #pragma mark - Notifications
 
-- (void)batteryLevelOrStateChanged:(NSNotification*)notification
+- (void)batteryLevelOrStateChanged:(NSNotification *)notification
 {
     float batteryLevel = UIDevice.currentDevice.batteryLevel;
     BOOL isCharging = UIDevice.currentDevice.batteryState == UIDeviceBatteryStateCharging;
@@ -606,9 +610,9 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
 
 // We know that CLLocationManager only works on the main thread, so we do not need to dispatch to main queue here
 
-- (void)locationManager:(CLLocationManager *)manager
-    didUpdateToLocation:(CLLocation *)newLocation
-           fromLocation:(CLLocation *)oldLocation
+- (void)    locationManager:(CLLocationManager *)manager
+        didUpdateToLocation:(CLLocation *)newLocation
+               fromLocation:(CLLocation *)oldLocation
 {
     if (isListeningToDistanceTravelled && (!lastLocation || [lastLocation distanceFromLocation:newLocation] > distanceMetersBar))
     {

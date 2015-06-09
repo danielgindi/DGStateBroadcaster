@@ -7,27 +7,27 @@
 //  https://github.com/danielgindi/DGStateBroadcaster
 //
 //  The MIT License (MIT)
-//  
+//
 //  Copyright (c) 2014 Daniel Cohen Gindi (danielgindi@gmail.com)
-//  
+//
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-//  
+//
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-//  
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE. 
-//  
+//  SOFTWARE.
+//
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
@@ -35,10 +35,10 @@
 
 typedef enum _DGStateBroadcasterState
 {
-    DGStateBroadcasterLowBattery = 0x01,
-    DGStateBroadcasterDistanceTravelled = 0x02,
-    DGStateBroadcasterLocationAccuracy = 0x04,
-    DGStateBroadcasterNetworkReachability = 0x08,
+	DGStateBroadcasterLowBattery = 0x01,
+	DGStateBroadcasterDistanceTravelled = 0x02,
+	DGStateBroadcasterLocationAccuracy = 0x04,
+	DGStateBroadcasterNetworkReachability = 0x08,
 } DGStateBroadcasterState;
 
 @class DGStateBroadcaster;
@@ -47,7 +47,7 @@ typedef enum _DGStateBroadcasterState
 @optional
 
 - (void)stateBroadcasterBatteryChargedLow:(BOOL)isLow charging:(BOOL)isCharging;
-- (void)stateBroadcasterDistanceTravelledToLocation:(CLLocation*)location;
+- (void)stateBroadcasterDistanceTravelledToLocation:(CLLocation *)location;
 - (void)stateBroadcasterLocationAccurateEnough:(BOOL)accurateEnough;
 - (void)stateBroadcasterNetworkReachable:(BOOL)reachable isOnWifi:(BOOL)wifi;
 - (void)stateBroadcasterLocationManagerDidChangeAuthorizationStatus:(CLAuthorizationStatus)status;
@@ -74,13 +74,13 @@ typedef enum _DGStateBroadcasterState
 + (void)setLocationAccuracyBarInMeters:(double)meters;
 + (void)setLowBatteryBar:(float)batteryCharge;
 
-+ (void)setReachabilityWithHostname:(NSString*)hostname;
-+ (void)setReachabilityWithAddress:(const struct sockaddr_in*)hostAddress;
++ (void)setReachabilityWithHostname:(NSString *)hostname;
++ (void)setReachabilityWithAddress:(const struct sockaddr_in *)hostAddress;
 + (void)setReachabilityForInternetConnection; // This is the default mode
 + (void)setReachabilityForWifiInternetConnection;
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-+ (void)setLocationPurpose:(NSString*)purpose;
++ (void)setLocationPurpose:(NSString *)purpose;
 #endif
 + (void)setLocationActivityType:(CLActivityType)activityType;
 + (CLAuthorizationStatus)locationAuthorizationStatus;
@@ -93,8 +93,13 @@ typedef enum _DGStateBroadcasterState
 + (BOOL)isBatteryCurrentlyCharging;
 + (float)currentBatteryLevel;
 
-+ (BOOL)isReachable; // Available only when listening to reachability!
-+ (BOOL)isOnWifi; // Available only when listening to reachability!
-+ (NSString*)wifiIpAddress;
+/** @brief Is internet reachable? This is only available when listening to reachability */
++ (BOOL)isReachable;
+
+/** @brief Is internet reachable on a WiFi connection? This is only available when listening to reachability */
++ (BOOL)isOnWifi;
+
+/** @brief If internet is reachable on WiFi, then this returns the current WiFi IP Address */
++ (NSString *)wifiIpAddress;
 
 @end
