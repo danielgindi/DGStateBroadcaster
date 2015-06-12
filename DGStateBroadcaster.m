@@ -343,7 +343,7 @@ static NSString *s_DGStateBroadcaster_RechabilitySync = @"s_DGStateBroadcaster_R
         if (SCNetworkReachabilitySetCallback(reachabilityRef, DGStateBroadcaster_ReachabilityCallback, &context))
         {
             // set it as our reachability queue which will retain the queue
-            if (SCNetworkReachabilitySetDispatchQueue(reachabilityRef, reachabilityQueue))
+            if (!SCNetworkReachabilitySetDispatchQueue(reachabilityRef, reachabilityQueue))
             {
                 NSLog(@"DGStateBroadcaster: Reachability- can't set dispatch queue");
             }
