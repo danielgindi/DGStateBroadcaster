@@ -1,7 +1,6 @@
 //
 //  DGStateBroadcaster.m
 //
-//  Created by Daniel Cohen Gindi on 5/8/13.
 //  Copyright (c) 2013 danielgindi@gmail.com. All rights reserved.
 //
 //  https://github.com/danielgindi/DGStateBroadcaster
@@ -39,8 +38,6 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <netdb.h>
-
-#define IS_OS_8_OR_LATER (UIDevice.currentDevice.systemVersion.floatValue >= 8.f)
 
 @interface DGStateBroadcaster () <CLLocationManagerDelegate>
 {
@@ -504,18 +501,12 @@ static void DGStateBroadcaster_ReachabilityCallback(SCNetworkReachabilityRef tar
 
 + (void)requestLocationWhenInUseAuthorization
 {
-    if (IS_OS_8_OR_LATER)
-    {
-        [[self instance]->locationManager requestWhenInUseAuthorization];
-    }
+    [[self instance]->locationManager requestWhenInUseAuthorization];
 }
 
 + (void)requestLocationAlwaysAuthorization
 {
-    if (IS_OS_8_OR_LATER)
-    {
-        [[self instance]->locationManager requestAlwaysAuthorization];
-    }
+    [[self instance]->locationManager requestAlwaysAuthorization];
 }
 
 + (CLAuthorizationStatus)locationAuthorizationStatus
